@@ -27,10 +27,18 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo ${{ github.actor }}
+        run: |
+          cat <<JSON > config.json
+          {
+            "auths": {
+              "ghcr.io": {
+                "auth": "$(echo -n ${{ github.actor }}:${{ secrets.GHCR_PAT }} | base64)"
+              }
+            }
+          }
+          JSON
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cat config.json
